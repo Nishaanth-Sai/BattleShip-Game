@@ -1,0 +1,109 @@
+# ‘X’ shows  the ships hit
+# ‘-‘ shows the hits missed
+#AI is random (no same locations)
+# You cannot choose YOUR ships, only sink the opponents.
+
+from random import randint
+
+Hidden_Pattern=[[' ']*8 for x in range(8)]
+Guess_Pattern=[[' ']*8 for x in range(8)]
+
+let_to_num={'A':0,'B':1, 'C':2,'D':3,'E':4,'F':5,'G':6,'H':7}
+
+def print_board(board):
+    print(' A B C D E F G H')
+    print(' ***************')
+    row_num=1
+    for row in board:
+        print("%d|%s|" % (row_num, "|".join(row)))
+        row_num +=1
+# Enter row (1-8)
+def get_ship_location():
+    row=input('Please enter a ship row 1-8 ').upper()
+    while row not in '12345678':
+        print("Please enter a valid row ")
+        row=input('Please enter a ship row 1-8 ')
+
+       
+
+# Enter collum (A-H)
+# Area is 8x8 (64 choices)
+# Only 4 ships (no extended battleships, only one square for each ship)
+#10 turns =
+    column=input('Please enter a ship column A-H ').upper()
+    while column not in 'ABCDEFGH':
+        print("That does not sound like the right row ")
+        column=input('Please enter a ship column A-H ')
+    return int(row)-1,let_to_num[column]
+
+#code that creates the location of ship
+def create_ships(board):
+    for ship in range(5):
+        ship_r, ship_cl=randint(0,7), randint(0,7)
+        while board[ship_r][ship_cl] =='X':
+            ship_r, ship_cl = randint(0, 7), randint(0, 7)
+        board[ship_r][ship_cl] = 'X'
+
+
+
+def count_hit_ships(board):
+    count=0
+    for row in board:
+        for column in row:
+            if column=='X':
+                count+=1
+    return count
+
+create_ships(Hidden_Pattern)
+#print_board(Hidden_Pattern)
+turns = 100
+   
+
+#Difficulty Line of Code
+print('Welcome to Battleship')
+print ("please pick your difficulty:")
+print ("Baby Mode (50 turns): press 1")
+print ("Easy (40 turns): press 2")
+print ("Normal(25 turns): press 3")
+print ("Hard(15 turns): press 4")
+print ("Battleship In real Life (7 turns but): press 5")
+user_difficulty = int(input("Pick difficulty:"))
+if (user_difficulty) == (1):
+    new_turns = (turns - 50)
+    print ("You have chosen to be a baby, you now have 50 turns (if you lose, I am telling everyone :])")
+elif (user_difficulty)== (2):
+    new_turns = (turns - 60)
+    print ("You have chosen Easy Mode, you now have 40 turns (if you lose, I will be dissapointed :[)")
+elif (user_difficulty) ==(3):
+    new_turns = (turns - 75)
+    print ("You have now chosen Normal Mode, you now have 25 turns (Good Luck!)")
+elif (user_difficulty) == (4):
+    new_turns = (turns - 85)
+    print ("You have chosen Hard Mode, you now have 15 turns (If you win, I will be very impressed ;])")
+elif (user_difficulty) == (5):
+    new_turns = (turns - 93)
+    print ("so you have chosen... Death, you now have 7 turns (The only person that beat this was Taylor Kitsch, and that was BEFORE the movie)")
+
+while new_turns > 0:
+   
+    print
+    print_board(Guess_Pattern)
+    row,column =get_ship_location()
+    if Guess_Pattern[row][column] == '-':
+        print(' You have already picked that spot! (lose 1 turn penalty) ')
+    elif Hidden_Pattern[row][column] =='X':
+        print('Welcome to Battleship')
+        print(' Congratulations you have hit the battleship ')
+        Guess_Pattern[row][column] = 'X'
+        new_turns -= 1
+    else:
+        print('Sorry,You missed')
+        Guess_Pattern[row][column] = '-'
+        new_turns -= 1
+    if  count_hit_ships(Guess_Pattern) == 5:
+        print("Congratulations you have sunk all the battleships ")
+        break
+    print(' You have ', (new_turns), ' turns remaining ')
+    if turns == 0:
+        print('Game Over ')
+        break
